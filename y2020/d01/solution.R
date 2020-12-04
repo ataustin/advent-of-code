@@ -4,7 +4,7 @@ find_prod <- function(input, n_combs) {
   prod(combs[, sum_ix])
 }
 
-x <- read.csv("input.txt", header = FALSE)[[1L]]
+x <- as.integer(readLines("input.txt", warn = FALSE))
 
 # challenge 1
 find_prod(x, 2)
