@@ -1,4 +1,4 @@
-parse_policy <- function(text) {
+parse_record <- function(text) {
   policy_pwd    <- unlist(strsplit(text, ": "))
   number_letter <- unlist(strsplit(policy_pwd[1], " "))
   min_max       <- unlist(strsplit(number_letter[1], "-"))
@@ -7,7 +7,8 @@ parse_policy <- function(text) {
                          max = as.integer(min_max[2]),
                          letter = number_letter[2],
                          password = policy_pwd[2],
-                         appearances = sum(unlist(gregexpr(number_letter[2], policy_pwd[2])) > 0))
+                         appearances = sum(unlist(gregexpr(number_letter[2],
+                                                           policy_pwd[2])) > 0))
 
   pwd_data$min_letter <- substr(pwd_data$password, pwd_data$min, pwd_data$min)
   pwd_data$max_letter <- substr(pwd_data$password, pwd_data$max, pwd_data$max)
@@ -15,9 +16,9 @@ parse_policy <- function(text) {
   pwd_data
 }
 
-x <- readLines("input.txt")
+input <- readLines("input.txt")
 
-parse_list <- lapply(x, parse_policy)
+parse_list <- lapply(input, parse_record)
 parse_data <- do.call(rbind, parse_list)
 
 
@@ -26,12 +27,15 @@ is_between <- function(x, min, max) {
   x >= min & x <= max
 }
 
-sum(is_between(parse_data$appearances, parse_data$min, parse_data$max))
+with(parse_data, sum(is_between(appearances, min, max)))
 
 
 # challenge 2
-is_singlet <- function(letter, first, second) {
+is_singleton <- function(letter, first, second) {
   xor(letter == first, letter == second)
 }
 
-sum(is_singlet(parse_data$letter, parse_data$min_letter, parse_data$max_letter))
+with(parse_data, sum(is_singleton(letter, min_letter, max_letter)))
+
+
+
