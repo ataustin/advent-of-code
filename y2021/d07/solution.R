@@ -6,7 +6,7 @@ cost2 <- function(start, end) sum((abs(start-end)+1) * abs(start-end)/2)
 
 # we will compare run times of brute-force and optimization approaches
 brute_force <- function(input, cost_fn) {
-  cost <- sum(input^2)   # guaranteed to be too large
+  cost <- Inf
   for(pos in min(input):max(input)) {
     new_cost <- cost_fn(input, pos)
     if(new_cost < cost) cost <- new_cost
