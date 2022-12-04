@@ -4,8 +4,8 @@ crates <- lapply(crates, function(col) gsub("[^A-Z]", "", col))
 crates <- lapply(crates, function(vec) rev(vec[vec != ""]))
 
 moves <- read.table(text = gsub("move|from|to", ",", readLines("input.txt")),
-                  sep = ",", strip.white = TRUE, skip = N + 2,
-                  col.names = c("", "count", "from", "to"))
+                    sep = ",", strip.white = TRUE, skip = N + 2,
+                    col.names = c("", "count", "from", "to"))
 
 move_crates <- function(crates, move, mover_fun) {
   from_stack <- crates[[move$from]]
@@ -20,9 +20,7 @@ solve <- function(crates, moves, mover_fun) {
 }
 
 # part 1
-p1_crates <- crates
-solve(p1_crates, moves, rev)
+solve(crates, moves, rev)
 
 # part 2
-p2_crates <- crates
-solve(p2_crates, moves, identity)
+solve(crates, moves, identity)
