@@ -12,11 +12,11 @@ structure_game <- function(sets) {
 
 # combine all games and find the max cubes of each color per game
 sets    <- strsplit(gsub("Game \\d+: ", "", input), split = "; ")
-games   <- setNames(lapply(sets, structure_game), 1:length(games))
+games   <- setNames(lapply(sets, structure_game), 1:length(sets))
 game_df <- do.call(rbind, games)
 game_df$game <- gsub("\\..*$", "", rownames(game_df))
 
-max_cubes <- aggregate(count ~ color + game, y, max)
+max_cubes <- aggregate(count ~ color + game, game_df, max)
 
 # part 1
 limit <- data.frame(color = c("red", "green", "blue"),
