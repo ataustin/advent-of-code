@@ -11,14 +11,14 @@ get_rank <- function(hands, strength_map, type_map, use_joker = FALSE) {
   type_map <- c("15" = 7, "24" = 6, "23" = 5, "33" = 4,
                 "32" = 3, "42" = 2, "51" = 1)
   hand_rank <- rank(paste0(type_map[type_code], strength))
-  hand_rank
+  hand_rank 
 }
 
 
 # part 1
 strength_map <- setNames(letters[13:1], c("A", "K", "Q", "J", "T", 9:2))
-sum(get_rank(hands, strength_map, type_map) * input$bid)
+sum(get_rank(hands, strength_map) * input$bid)
 
 # part 2
 strength_map <- setNames(letters[13:1], c("A", "K", "Q", "T", 9:2, "J"))
-sum(get_rank(hands, strength_map, type_map, use_joker = TRUE) * input$bid)
+sum(get_rank(hands, strength_map, use_joker = TRUE) * input$bid)
