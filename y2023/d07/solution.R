@@ -1,48 +1,24 @@
 input <- read.table("input.txt", col.names = c("hand", "bid"))
-
 hands <- strsplit(input$hand, "")
-tabs  <- lapply(hands, table)
-input$u_ct   <- lengths(tabs)
-input$max_ct <- sapply(tabs, max)
-input$type_code <- paste(input$u_ct, input$max_ct, sep = "")
 
-rank_map <- c("15" = 7, "24" = 6, "23" = 5, "33" = 4,
-              "32" = 3, "42" = 2, "51" = 1)
-
-input$type_rank <- rank_map[input$type_code]
-
-strength_map <- data.frame(face     = c("A", "K", "Q", "J", "T", 9:2),
-                           strength = letters[13:1])
-
-get_strength <- function(hand, map) {
-  paste(map$strength[match(hand, map$face)], collapse = "")
+get_rank <- function(hands, strength_map, type_map, use_joker = FALSE) {
+  tabs  <- if(use_joker) lapply(hands, function(x) if(all(x == "J")) 0 else table(x[x != "J"])) else lapply(hands, table)
+  j_ct  <- if(use_joker) sapply(hands, function(h) sum(h == "J")) else rep(0, length(hands))
+  u_ct  <- ifelse(j_ct == 5, 1, lengths(tabs))
+  max_ct <- sapply(tabs, max) + j_ct
+  type_code <- paste(u_ct, max_ct, sep = "")
+  strength <- sapply(hands, function(h) paste(strength_map[h], collapse = ""))
+  type_map <- c("15" = 7, "24" = 6, "23" = 5, "33" = 4,
+                "32" = 3, "42" = 2, "51" = 1)
+  hand_rank <- rank(paste0(type_map[type_code], strength))
+  hand_rank
 }
-
-input$strength <- vapply(hands, get_strength, character(1), strength_map)
-input$overall_rank <- rank(paste0(input$type_rank, input$strength))
 
 
 # part 1
-sum(input$overall_rank * input$bid)
-
+strength_map <- setNames(letters[13:1], c("A", "K", "Q", "J", "T", 9:2))
+sum(get_rank(hands, strength_map, type_map) * input$bid)
 
 # part 2
-input$j_ct <- sapply(hands, function(x) sum(x == "J"))
-input$u_ct <- ifelse(input$j_ct == 5, 1, input$u_ct - (input$j_ct > 0))
-tabs  <- lapply(hands, function(x) if(all(x == "J")) 0 else table(x[x != "J"]))
-input$max_ct <- sapply(tabs, max) + input$j_ct
-# input$max_ct <- ifelse(input$j_ct == 5, 5, input$max_ct)
-input$type_code <- paste(input$u_ct, input$max_ct, sep = "")
-
-
-input$type_rank <- rank_map[input$type_code]
-
-strength_map <- data.frame(face     = c("A", "K", "Q", "T", 9:2, "J"),
-                           strength = letters[13:1])
-
-
-input$strength <- vapply(hands, get_strength, character(1), strength_map)
-
-input$overall_rank <- rank(paste0(input$type_rank, input$strength))
-
-sum(input$overall_rank * input$bid)
+strength_map <- setNames(letters[13:1], c("A", "K", "Q", "T", 9:2, "J"))
+sum(get_rank(hands, strength_map, type_map, use_joker = TRUE) * input$bid)
