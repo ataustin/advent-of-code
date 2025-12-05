@@ -1,4 +1,4 @@
-x    <- 1 * (do.call(rbind, strsplit(readLines("input.txt"), "")) == "@")
+x <- 1 * (do.call(rbind, strsplit(readLines("input.txt"), "")) == "@")
 
 count <- function(input) {
   mat  <- cbind(0, rbind(0, input, 0), 0)
@@ -23,8 +23,8 @@ remove_ct
 remove <- remove_ct
 while(remove_ct > 0) {
   x[count(x) < 4] <- 0
-  remove_ct <- sum(count(x) < 4)
-  remove <- remove + remove_ct
+  remove_ct       <- sum(count(x) < 4)
+  remove          <- remove + remove_ct
 }
 
 remove
