@@ -1,9 +1,11 @@
 x       <- do.call(rbind, strsplit(readLines("input.txt"), ""))
 beam_ix <- which(x[1, ] == "S")
+
+# logical matrix indicating locations of splitters. ignore empty rows.
 split   <- rbind((x[apply(x, 1, \(y) !all(y == ".")), ] == "^")[2:(nrow(x)/2), ],
                  FALSE)
 
-# Setup
+
 # initialize a matrix to indicate how many beams have passed a given point
 ct_mat <- matrix(0, nrow(split), ncol(split))
 ct_mat[1, beam_ix] <- 1
