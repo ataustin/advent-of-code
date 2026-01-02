@@ -1,14 +1,8 @@
 input <- strsplit(t(read.csv("input.txt", header = FALSE)), "-")
+ids   <- unlist(lapply(input, \(x) x[1]:x[2]))
 
-get_candidates <- function(range) {
-  vec <- range[1]:range[2]
-  vec <- vec[nchar(vec) %% 2 == 0]
-  vec
-}
+# part 1
+sum(ids[grepl("^(.+)\\1$", ids)])
 
-ids <- unlist(lapply(input, get_candidates))
-nch <- nchar(ids)
-h1  <- substr(ids, start = 1, stop = nch/2)
-h2  <- substr(ids, start = (nch/2) + 1, stop = nch)
-
-sum(ids[h1 == h2])
+# part 2
+sum(ids[grepl("^(.+)\\1+$", ids)])
